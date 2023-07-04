@@ -1,5 +1,5 @@
 class Lexer:
-    def __init__(token, lexer, line):
+    def __init__(self, token, lexer, line):
         self.token = token
         self.lexer = lexer
         self.line = line
