@@ -10,7 +10,6 @@ class SintaticalAnalyzer:
     def start(self):
         print('\033[32m' + "START" + '\033[0m')
         self.program()
-        print(self.token_list[self.look_ahead].token)
         print('\033[32m' + "END\n" + '\033[0m')
         return self.instructions
        
@@ -30,6 +29,13 @@ class SintaticalAnalyzer:
         self.match("<abre_chaves>")
         self.block()
         self.match("<fecha_chaves>")
+        if(self.token_list[self.look_ahead].token == "<fim_arquivo>"):
+            self.match("<fim_arquivo>")
+        else:
+            print('\033[91m' + "Syntax error line: " + str(self.token_list[self.look_ahead].line) + '\033[0m')
+            exit()
+           
+
        
        
                
