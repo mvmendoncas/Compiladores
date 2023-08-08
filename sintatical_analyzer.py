@@ -64,7 +64,7 @@ class SintaticalAnalyzer:
         elif(token_.token == "<declaracao_funcao>"):
             self.declaracao_function()
             self.block()
-        elif(token_.token == "<condicao>"):
+        elif(token_.token == "<se>"):
             self.condicao()
             self.block()
         elif(token_.token == "<laco>"):
@@ -236,19 +236,18 @@ class SintaticalAnalyzer:
             look_ahead_aux += 1
         self.instructions.append(instruction_aux)
 
-        self.match("<condicao>")
+        self.match("<se>")
         self.match("<abre_parenteses>")
         self.simple_exp()
         self.match("<fecha_parenteses>")
         self.match("<abre_chaves>")
         self.block()
         self.match("<fecha_chaves>")
-
-        self.instructions.append([self.token_list[self.look_ahead],self.token_list[self.look_ahead]])
-        self.match("<condicao>")
-        self.match("<abre_chaves>")
-        self.block()
-        self.match("<fecha_chaves>")
+        if(self.token_list[self.look_ahead].token == "<senao>"):
+            self.match("<senao>")
+            self.match("<abre_chaves>")
+            self.block()
+            self.match("<fecha_chaves>")
             
     def laco(self):
         look_ahead_aux = self.look_ahead

@@ -64,10 +64,10 @@ class LexicalAnalyzer:
             self.tokens.append(Lexer("<declaracao_funcao>", "funcao", line))
             return True
         if(buffer == "if"):
-            self.tokens.append(Lexer("<condicao>", "if", line))
+            self.tokens.append(Lexer("<se>", "if", line))
             return True
         if(buffer == "else"):
-            self.tokens.append(Lexer("<condicao>", "else", line))
+            self.tokens.append(Lexer("<senao>", "else", line))
             return True
         if(buffer == "while"):
             self.tokens.append(Lexer("<laco>", "while", line))
@@ -122,15 +122,6 @@ class LexicalAnalyzer:
             return True
         if(buffer == "mod"):
             self.tokens.append(Lexer("<operador_aritmetico>", "mod", line))
-            return True
-        if(buffer == "&&"):
-            self.tokens.append(Lexer("<operador_logico>", "&&", line))
-            return True
-        if(buffer == "||"):
-            self.tokens.append(Lexer("<operador_logico>", "||", line))
-            return True
-        if(buffer == "mod"):
-            self.tokens.append(Lexer("<operador_termo>", "mod", line))
             return True
         if(buffer == "="):
             self.tokens.append(Lexer("<atribuicao>", "=", line))
