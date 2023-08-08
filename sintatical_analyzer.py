@@ -24,8 +24,7 @@ class SintaticalAnalyzer:
             print('\033[91m' + "Not Found: "+ terminal + '\033[0m')
             print('\033[91m' + "Syntax error line: " + str(self.token_list[self.look_ahead].line) + '\033[0m')
             exit()
-            #self.look_ahead += 1
-#----------------------------------------------------------------------------------------------------
+ 
     def program(self):
         self.match("<programa>")
         self.match("<abre_chaves>")
@@ -57,9 +56,7 @@ class SintaticalAnalyzer:
                     
                     self.function()
                     self.match("<fim_comando>")
-               # else:
-                    #print('\033[91m' + "Error line {0} ".format((self.token_list[look_ahead_aux].line) + '\033[0m'))
-               #     exit()
+              
             else:
                 self.match("<variavel>")
                 self.atribution()
@@ -67,38 +64,23 @@ class SintaticalAnalyzer:
         elif(token_.token == "<declaracao_funcao>"):
             self.declaracao_function()
             self.block()
-        elif(token_.token == "<condition>"):
-            self.condition()
+        elif(token_.token == "<condicao>"):
+            self.condicao()
             self.block()
         elif(token_.token == "<laco>"):
             self.laco()
             self.block()
         elif(token_.token == "<imprimir>"):
-            #print(self.token_list[self.look_ahead].lexema)
             self.imprimir()
             self.block()
         elif(token_.token == "<procedimento>"):
             self.procedure()
             self.block()
-        elif(token_.token == "<constante>"):
-            self.match("<constante>")
-            self.match("<variavel>")
-           # if(verificar_atribuicao(self.token_list, self.symbol_table, self.look_ahead)):
-            self.match("<atribuicao>")
-            if(self.token_list[self.look_ahead].token == "<operador_booleano>"):
-                    self.match("<operador_booleano>")
-            elif(self.token_list[self.look_ahead].token != "<variavel>"):
-                    self.match("<numerico>")
-            self.match("<fim_comando>")
-            self.block()
       
-       
-        
 
-    def declaracao_variavelBooleana(self): ## não é chamadooo
+    def declaracao_variavelBooleana(self): 
         self.match("<tipo>")
         self.match("<variavel>")
-        #self.match("<fim_comando>")
 
     def declaracao_variavel(self):
         self.match("<tipo>")
@@ -120,23 +102,23 @@ class SintaticalAnalyzer:
     def atribution(self):
         look_ahead_aux = self.look_ahead - 1
         instruction_aux = []
-        while(self.token_list[look_ahead_aux].token not in ["<fim_comando>", "<EOF>"]):
+        while (look_ahead_aux < len(self.token_list) and self.token_list[look_ahead_aux].token not in ["<fim_comando>", "<EOF>"]):
             instruction_aux.append(self.token_list[look_ahead_aux])
-
+            
             look_ahead_aux += 1
+            
         self.instructions.append(instruction_aux)
 
-        #if verificar_atribuicao(self.token_list, self.symbol_table, self.look_ahead):
         self.match("<atribuicao>")
         if(self.token_list[self.look_ahead].token == "<operador_booleano>"):
             self.match("<operador_booleano>")
         elif(self.token_list[self.look_ahead].token != "<variavel>"):
-                self.match("<numerico>")
+                self.match("<numero>")
                 if(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
                     while(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
                         self.match("<operador_aritmetico>")
-                        if(self.token_list[self.look_ahead].token == "<numerico>"):
-                            self.match("<numerico>")
+                        if(self.token_list[self.look_ahead].token == "<numero>"):
+                            self.match("<numero>")
                         else:
                             self.match("<variavel>")
         else:
@@ -147,8 +129,8 @@ class SintaticalAnalyzer:
                     if(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
                         while(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
                             self.match("<operador_aritmetico>")
-                            if(self.token_list[self.look_ahead].token == "<numerico>"):
-                                self.match("<numerico>")
+                            if(self.token_list[self.look_ahead].token == "<numero>"):
+                                self.match("<numero>")
                             else:
                                 self.match("<variavel>")
         self.match("<fim_comando>")
@@ -190,7 +172,7 @@ class SintaticalAnalyzer:
                 return
         elif(token_.token == "<virgula>"):
             self.match("<virgula>")
-            if(self.token_list[self.look_ahead].token != "<variavel>" and self.token_list[self.look_ahead].token != "<numerico>" and self.token_list[self.look_ahead].token != "<operador_booleano>" ):
+            if(self.token_list[self.look_ahead].token != "<variavel>" and self.token_list[self.look_ahead].token != "<numero>" and self.token_list[self.look_ahead].token != "<operador_booleano>" ):
                 self.match("<tipo>")
                 self.match("<variavel>")
                 self.parameters()
@@ -202,8 +184,8 @@ class SintaticalAnalyzer:
             if(self.token_list[self.look_ahead].token == "<virgula>"):
                 self.parameters()
             return
-        elif(token_.token == "<numerico>"):
-            self.match("<numerico>")
+        elif(token_.token == "<numero>"):
+            self.match("<numero>")
             if(self.token_list[self.look_ahead].token == "<virgula>"):
                 self.parameters()
             return
@@ -225,13 +207,13 @@ class SintaticalAnalyzer:
                 elif(self.token_list[self.look_ahead].token == "<operador_booleano>"):
                     self.match("<operador_booleano>")
                 else:
-                    self.match("<numerico>")
+                    self.match("<numero>")
             else:
                 self.match("<operador_aritmetico>")
                 if(self.token_list[self.look_ahead].token == "<variavel>"):
                     self.match("<variavel>")
-                elif(self.token_list[self.look_ahead].token == "<numerico>"):
-                    self.match("<numerico>")
+                elif(self.token_list[self.look_ahead].token == "<numero>"):
+                    self.match("<numero>")
 
                 
                 if(self.token_list[self.look_ahead].token == "<operador_relacional>"):
@@ -239,9 +221,9 @@ class SintaticalAnalyzer:
                     if(self.token_list[self.look_ahead].token == "<variavel>"):
                         self.match("<variavel>")
                     else:
-                        self.match("<numerico>")
+                        self.match("<numero>")
        
-    def condition(self):
+    def condicao(self):
         look_ahead_aux = self.look_ahead
         instruction_aux = []
         while self.token_list[look_ahead_aux].token not in ["<abre_chaves>","<EOF>"]:
@@ -305,10 +287,8 @@ class SintaticalAnalyzer:
         self.match("<abre_parenteses>")
         if(self.token_list[self.look_ahead].token == "<variavel>"):
             self.match("<variavel>") 
-        elif(self.token_list[self.look_ahead].token == "<constante>"):
-            self.match("<constante>")
         else:
-            self.match("<numerico>")
+            self.match("<numero>")
         self.match("<fecha_parenteses>")
         self.match("<fim_comando>")
     
@@ -326,7 +306,7 @@ class SintaticalAnalyzer:
             self.match("<variavel>")
            
         else:
-            self.match("<numerico>")
+            self.match("<numero>")
         self.match("<fim_comando>")
 
         end = [Lexer("<end_func>","end_func",0), Lexer("<end_func>","end_func",0)]

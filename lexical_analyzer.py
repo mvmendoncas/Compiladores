@@ -204,9 +204,7 @@ class LexicalAnalyzer:
                         j += 1
                     self.simbols_table[buffer] = ExpressionFunction("procedure", line, amountParameters, listParameters)
                 
-                elif(self.tokens[len(self.tokens) - 1].token == "<abre_parenteses>" or self.tokens[len(self.tokens) - 1].token == "<virgula>"):
-                    print('\033[91m' + "Error variable {0} uninitialized ".format(buffer) + '\033[0m')
-                    quit()
+        
                 self.tokens.append(Lexer("<variavel>", buffer, line))
 
             else:
