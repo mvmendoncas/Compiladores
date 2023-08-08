@@ -70,8 +70,8 @@ class SintaticalAnalyzer:
         elif(token_.token == "<laco>"):
             self.laco()
             self.block()
-        elif(token_.token == "<imprimir>"):
-            self.imprimir()
+        elif(token_.token == "<imprime>"):
+            self.imprime()
             self.block()
         elif(token_.token == "<procedimento>"):
             self.procedure()
@@ -213,15 +213,18 @@ class SintaticalAnalyzer:
                 if(self.token_list[self.look_ahead].token == "<variavel>"):
                     self.match("<variavel>")
                 elif(self.token_list[self.look_ahead].token == "<numero>"):
-                    self.match("<numero>")
-
-                
+                    self.match("<numero>") 
                 if(self.token_list[self.look_ahead].token == "<operador_relacional>"):
                     self.match("<operador_relacional>")
                     if(self.token_list[self.look_ahead].token == "<variavel>"):
                         self.match("<variavel>")
                     else:
                         self.match("<numero>")
+            if(self.token_list[self.look_ahead].token == "<operador_logico>"):
+                self.match("<operador_logico>")
+             
+
+            
        
     def condicao(self):
         look_ahead_aux = self.look_ahead
@@ -262,28 +265,28 @@ class SintaticalAnalyzer:
         self.match("<fecha_parenteses>")
         self.match("<abre_chaves>")
         self.block()
-        if(self.token_list[self.look_ahead].token == "<continuar>"):
-            self.match("<continuar>")
+        if(self.token_list[self.look_ahead].token == "<pare>"):
+            self.match("<pare>")
             self.match("<fim_comando>")
-        elif(self.token_list[self.look_ahead].token == "<parar>"):
-            self.match("<parar>")
+        elif(self.token_list[self.look_ahead].token == "<continue>"):
+            self.match("<continue>")
             self.match("<fim_comando>")
 
 
         self.instructions.append([self.token_list[self.look_ahead],self.token_list[self.look_ahead -1] ])
         self.match("<fecha_chaves>")
     
-    def imprimir(self):
+    def imprime(self):
         instruction_aux = []
         look_ahead_aux = self.look_ahead
 
-        while self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
+        while look_ahead_aux < len(self.token_list) and self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
             instruction_aux.append(self.token_list[look_ahead_aux])
             look_ahead_aux += 1
 
         self.instructions.append(instruction_aux)
 
-        self.match("<imprimir>")
+        self.match("<imprime>")
         self.match("<abre_parenteses>")
         if(self.token_list[self.look_ahead].token == "<variavel>"):
             self.match("<variavel>") 

@@ -85,10 +85,10 @@ class LexicalAnalyzer:
             self.tokens.append(Lexer("<imprime>", "print", line))
             return True
         if(buffer == "break"):
-            self.tokens.append(Lexer("<comando_desvio>", "break", line))
+            self.tokens.append(Lexer("<pare>", "break", line))
             return True
         if(buffer == "continue"):
-            self.tokens.append(Lexer("<comando_desvio>", "continue", line))
+            self.tokens.append(Lexer("<continue>", "continue", line))
             return True
         if(buffer == "!="):
             self.tokens.append(Lexer("<operador_relacional>", "!=", line))

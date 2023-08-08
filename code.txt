@@ -14,7 +14,15 @@ main{
 
     while(cont != 10){
         int a = 8 + 1;
+        continue;
+    }
+    print(variavel1);
+    int x;
+    int y;
+    if (x == 1 && y == 2){
+        print(1);
     }
 }
+
 
 
