@@ -3,26 +3,35 @@ main{
         int resultado = valorA + valorB;
         return resultado;
     }
-
+   
     int variavel1;
-    bool variavelBoo = true;
-    variavel1 = 10 + 10 - 1 * 2;
+    int variavelBoo = true;
+    variavel1 = 10 + 10 - 1 * 2 / 4;
 
-    int resultadoSoma = somar(variavel1, 100);
+    int resultadoSoma = somar(variavel1, true);
 
+    procedure teste(int a){
+        print(a);
+    }
+ 
     int cont = 10;
 
-    while(cont != 10){
+    while(cont == False){
         int a = 8 + 1;
         continue;
     }
-    print(variavel1);
+
+    print(9);
     int x;
-    int y;
+    bool y;
     if (x == 1){
         print(1);
     }else{
         print(0);
+    }
+
+    if ( y == True){
+        print(1);
     }
   
 }

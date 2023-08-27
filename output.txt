@@ -1,0 +1,52 @@
+
+func somar:
+begin_func:
+
+_t0 = valorA + valorB
+resultado = _t0
+
+return resultado
+
+end_func
+
+variavelBoo = true 
+
+_t0 = 10 + 10
+_t1 = _t0 - 1
+_t2 = _t1 * 2
+_t3 = _t2 / 4
+variavel1 = _t3
+
+_param = true 
+_param = variavel1 
+resultadoSoma = call somar,2
+
+proc teste:
+begin_proc:
+
+print(a)
+
+end_proc
+
+cont = 10 
+
+L1:
+whileFalse cont==False goto: L2
+
+_t0 = 8 + 1
+a = _t0
+
+goto: L1
+L2:
+
+print(9)
+
+ifFalse x==1 goto: L2
+
+print(1)
+
+print(0)
+
+ifFalse y==True goto: L3
+
+print(1)

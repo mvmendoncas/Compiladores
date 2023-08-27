@@ -72,14 +72,8 @@ class LexicalAnalyzer:
         if(buffer == "while"):
             self.tokens.append(Lexer("<laco>", "while", line))
             return True
-        if(buffer == "do"):
-            self.tokens.append(Lexer("<laco>", "do", line))
-            return True
         if(buffer == "return"):
             self.tokens.append(Lexer("<retorno>", "return", line))
-            return True
-        if(buffer == "input"):
-            self.tokens.append(Lexer("<leitura>", "input", line))
             return True
         if(buffer == "print"):
             self.tokens.append(Lexer("<imprime>", "print", line))

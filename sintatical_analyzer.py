@@ -46,12 +46,11 @@ class SintaticalAnalyzer:
             self.declaracao_variavel()
             self.block()
 
-        elif(token_.token == "<atribuicao>"):                
+        elif(token_.token == "<atribuicao>"):              
             self.atribution()
             self.block()
         elif(token_.token == "<variavel>"): #chamada function / procedimento
             if(self.token_list[self.look_ahead + 1].token == "<abre_parenteses>"):
-                #if(verificar_parameters(self.token_list, self.symbol_table, self.look_ahead)):
                     look_ahead_aux = self.look_ahead
                     instruction_aux = []
                     while self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
@@ -79,14 +78,12 @@ class SintaticalAnalyzer:
         elif(token_.token == "<imprime>"):
             self.imprime()
             self.block()
-        elif(token_.token == "<procedimento>"):
+        elif(token_.token == "<declaracao_procedimento>"):
             self.procedure()
             self.block()
       
 
-    def declaracao_variavelBooleana(self): 
-        self.match("<tipo>")
-        self.match("<variavel>")
+    
 
     def declaracao_variavel(self):
         self.match("<tipo>")
@@ -98,10 +95,17 @@ class SintaticalAnalyzer:
         self.match("<declaracao_funcao>")
         self.function()
         self.match("<abre_chaves>")
-     
         self.block()
         self.retorno()
         self.match("<fecha_chaves>")
+
+    def declaracao_procedimento(self):
+        self.match("<declaracao_procedimento>")
+        self.procedure()
+        self.match("<abre_chaves>")
+        self.block()
+        self.match("<fecha_chaves>")
+        self.match("<fim_comando>")
 
         
 
@@ -330,11 +334,16 @@ class SintaticalAnalyzer:
 
         self.instructions.append(instruction_aux)
 
-        self.match("<procedimento>")
-        self.function()
+        self.match("<declaracao_procedimento>")
+        self.match("<variavel>")
+        self.match("<abre_parenteses>")
+        self.parameters()
+        self.match("<fecha_parenteses>")
         self.match("<abre_chaves>")
         self.block()
         self.match("<fecha_chaves>")
+
+       
 
         endProc = [Lexer("<end_proc>","<end_proc>",0), Lexer("<end_proc>","endProc",0)]
         self.instructions.append(endProc)
