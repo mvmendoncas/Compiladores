@@ -8,7 +8,7 @@ main{
     int variavelBoo = true;
     variavel1 = 10 + 10 - 1 * 2 / 4;
 
-    int resultadoSoma = somar(variavel1, true);
+    int resultadoSoma = somar(true, 8);
 
     procedure teste(int a){
         print(a);

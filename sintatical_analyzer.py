@@ -1,4 +1,5 @@
 from lexer import Lexer
+from semantic_anayzer import *
 
 class SintaticalAnalyzer:
     def __init__(self, token_list, symbol_table):
@@ -35,10 +36,7 @@ class SintaticalAnalyzer:
             print('\033[91m' + "Syntax error line: " + str(self.token_list[self.look_ahead].line) + '\033[0m')
             exit()
            
-
-       
-       
-               
+    
     def block(self):
         token_ = self.token_list[self.look_ahead]
       
@@ -51,6 +49,14 @@ class SintaticalAnalyzer:
             self.block()
         elif(token_.token == "<variavel>"): #chamada function / procedimento
             if(self.token_list[self.look_ahead + 1].token == "<abre_parenteses>"):
+                if(verify_parameters(self.token_list, self.symbol_table, self.look_ahead)):
+                    look_ahead_aux = self.look_ahead
+                    instruction_aux = []
+                    while self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
+                        instruction_aux.append(self.token_list[look_ahead_aux])
+                        look_ahead_aux += 1
+                        
+                    self.instructions.append(instruction_aux)
                     look_ahead_aux = self.look_ahead
                     instruction_aux = []
                     while self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
@@ -61,6 +67,10 @@ class SintaticalAnalyzer:
                     
                     self.function()
                     self.match("<fim_comando>")
+                    self.function()
+                    self.match("<fim_comando>")
+                else:
+                    exit()
               
             else:
                 self.match("<variavel>")
@@ -82,8 +92,6 @@ class SintaticalAnalyzer:
             self.procedure()
             self.block()
       
-
-    
 
     def declaracao_variavel(self):
         self.match("<tipo>")
@@ -119,23 +127,12 @@ class SintaticalAnalyzer:
             
         self.instructions.append(instruction_aux)
 
-        self.match("<atribuicao>")
-        if(self.token_list[self.look_ahead].token == "<operador_booleano>"):
-            self.match("<operador_booleano>")
-        elif(self.token_list[self.look_ahead].token != "<variavel>"):
-                self.match("<numero>")
-                if(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
-                    while(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
-                        self.match("<operador_aritmetico>")
-                        if(self.token_list[self.look_ahead].token == "<numero>"):
-                            self.match("<numero>")
-                        else:
-                            self.match("<variavel>")
-        else:
-                if(self.token_list[self.look_ahead + 1].token == "<abre_parenteses>"):
-                    self.function()
-                else:
-                    self.match("<variavel>")
+        if(verify_attribution(self.token_list, self.symbol_table, self.look_ahead)):
+            self.match("<atribuicao>")
+            if(self.token_list[self.look_ahead].token == "<operador_booleano>"):
+                self.match("<operador_booleano>")
+            elif(self.token_list[self.look_ahead].token != "<variavel>"):
+                    self.match("<numero>")
                     if(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
                         while(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
                             self.match("<operador_aritmetico>")
@@ -143,8 +140,23 @@ class SintaticalAnalyzer:
                                 self.match("<numero>")
                             else:
                                 self.match("<variavel>")
-        self.match("<fim_comando>")
-       
+            else:
+                    if(self.token_list[self.look_ahead + 1].token == "<abre_parenteses>"):
+                        self.function()
+                    else:
+                        self.match("<variavel>")
+                        if(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
+                            while(self.token_list[self.look_ahead].token == "<operador_aritmetico>"):
+                                self.match("<operador_aritmetico>")
+                                if(self.token_list[self.look_ahead].token == "<numero>"):
+                                    self.match("<numero>")
+                                else:
+                                    self.match("<variavel>")
+            self.match("<fim_comando>")
+        else:
+            print('\033[91m' + "Syntax Error line {0} ".format(str(self.token_list[look_ahead_aux].line)) + '\033[0m')
+            exit()
+        
 
     def function(self):
         look_ahead_aux = self.look_ahead -1
@@ -208,7 +220,7 @@ class SintaticalAnalyzer:
             return
 
     def simple_exp(self): #*
-        #if verificar_expressao(self.token_list, self.symbol_table, self.look_ahead): ## VERIFICO SE A EXPRESSÃO ESTA CORRETA
+        if(verify_expressions(self.token_list, self.symbol_table, self.look_ahead)):
             self.match(self.token_list[self.look_ahead].token) #SE ENTROU NO IF ELE ACEITA QUALQUER COISA QUE VIER
             if(self.token_list[self.look_ahead].token == "<operador_relacional>"):
                 self.match("<operador_relacional>")
@@ -233,6 +245,8 @@ class SintaticalAnalyzer:
             if(self.token_list[self.look_ahead].token == "<operador_logico>"):
                 self.match("<operador_logico>")
              
+        else:
+            exit()
 
             
        
@@ -314,8 +328,10 @@ class SintaticalAnalyzer:
 
         self.match("<retorno>")
         if(self.token_list[self.look_ahead].token == "<variavel>"):
-
-            self.match("<variavel>")
+            if(verify_variable_return(self.token_list, self.symbol_table, self.look_ahead)):
+                self.match("<variavel>")
+            else:
+                quit()
            
         else:
             self.match("<numero>")
@@ -333,14 +349,14 @@ class SintaticalAnalyzer:
             look_ahead_aux += 1
 
         self.instructions.append(instruction_aux)
-
+        
         self.match("<declaracao_procedimento>")
-        self.match("<variavel>")
+        self.function()
         self.match("<abre_parenteses>")
-        self.parameters()
-        self.match("<fecha_parenteses>")
-        self.match("<abre_chaves>")
-        self.block()
+        if(verify_procedure(self.token_list, self.symbol_table, self.look_ahead)):
+            self.block()
+        else:
+            quit()
         self.match("<fecha_chaves>")
 
        
