@@ -57,18 +57,10 @@ class SintaticalAnalyzer:
                         look_ahead_aux += 1
                         
                     self.instructions.append(instruction_aux)
-                    look_ahead_aux = self.look_ahead
-                    instruction_aux = []
-                    while self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
-                        instruction_aux.append(self.token_list[look_ahead_aux])
-                        look_ahead_aux += 1
-                        
-                    self.instructions.append(instruction_aux)
-                    
+                  
                     self.function()
                     self.match("<fim_comando>")
-                    self.function()
-                    self.match("<fim_comando>")
+
                 else:
                     exit()
               
