@@ -2,12 +2,42 @@
 func somar:
 begin_func:
 
-_t0 = valorA + valorB
+_t0 = a + b
 resultado = _t0
 
 return resultado
 
 end_func
 
-_t0 = a + b
-r = _t0
+_t0 = 1 + 2
+_t1 = _t0 / 3
+_t2 = _t1 * 4
+x = _t2
+
+y = True 
+
+_param = 1 
+_param = x 
+s = call somar,2
+
+ifFalse y==False goto: L1
+
+print(a)
+
+
+print(s)
+
+proc exibe:
+begin_proc:
+
+print(price)
+
+end_proc
+
+L2:
+whileFalse y!=True goto: L3
+
+print(y)
+
+goto: L2
+L3:

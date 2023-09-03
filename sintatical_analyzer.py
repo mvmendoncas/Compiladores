@@ -27,6 +27,7 @@ class SintaticalAnalyzer:
  
     def program(self):
         self.match("<programa>")
+        print("COMECEII")
         self.match("<abre_chaves>")
         self.block()
         self.match("<fecha_chaves>")
@@ -35,7 +36,7 @@ class SintaticalAnalyzer:
         else:
             print('\033[91m' + "Syntax error line: " + str(self.token_list[self.look_ahead].line) + '\033[0m')
             exit()
-           
+      
     
     def block(self):
         token_ = self.token_list[self.look_ahead]
@@ -49,7 +50,9 @@ class SintaticalAnalyzer:
             self.block()
         elif(token_.token == "<variavel>"): #chamada function / procedimento
             if(self.token_list[self.look_ahead + 1].token == "<abre_parenteses>"):
+                print("NÃO PASSEI DA CHAMADA SEMANTICA")
                 if(verify_parameters(self.token_list, self.symbol_table, self.look_ahead)):
+                    print("PASSEI DA CHAMADA SEMANTICA")
                     look_ahead_aux = self.look_ahead
                     instruction_aux = []
                     while self.token_list[look_ahead_aux].token not in ["<fim_comando>","<EOF>"]:
@@ -84,6 +87,10 @@ class SintaticalAnalyzer:
             self.procedure()
             self.block()
       
+     
+    def declaracao_variavelBooleana(self): 
+        self.match("<tipo>")
+        self.match("<variavel>")
 
     def declaracao_variavel(self):
         self.match("<tipo>")
@@ -118,8 +125,9 @@ class SintaticalAnalyzer:
             look_ahead_aux += 1
             
         self.instructions.append(instruction_aux)
-
+        print("ANTES DO ANALISADOR SEMANTICO")
         if(verify_attribution(self.token_list, self.symbol_table, self.look_ahead)):
+            print("DEPOIS DO ANALISADOR SEMANTICO")
             self.match("<atribuicao>")
             if(self.token_list[self.look_ahead].token == "<operador_booleano>"):
                 self.match("<operador_booleano>")
@@ -259,6 +267,7 @@ class SintaticalAnalyzer:
         self.match("<abre_chaves>")
         self.block()
         self.match("<fecha_chaves>")
+        self.instructions.append([self.token_list[self.look_ahead],self.token_list[self.look_ahead -1] ])
         if(self.token_list[self.look_ahead].token == "<senao>"):
             self.match("<senao>")
             self.match("<abre_chaves>")
@@ -344,7 +353,7 @@ class SintaticalAnalyzer:
         
         self.match("<declaracao_procedimento>")
         self.function()
-        self.match("<abre_parenteses>")
+        self.match("<abre_chaves>")
         if(verify_procedure(self.token_list, self.symbol_table, self.look_ahead)):
             self.block()
         else:

@@ -1,19 +1,28 @@
 main{
-    func somar(int valorA, int valorB){
-        int resultado = valorA + valorB;
+    
+   func somar(int a, int b){
+        int resultado = a + b;
         return resultado;
-    }
-    int a; 
-    int b;
-    int r;
-    r = a + b;
+   }
 
-    while(a == 1){
+   int x = 1 + 2 / 3 * 4;
+   bool y = True;
+   int s;
+
+    s = somar(x, 1);
+
+    if(y == False){
         print(a);
+    }else {
+        print(s);
     }
-  
+
+    procedure exibe(int price){
+        print(price);
+    }
+    
+    while(y != True){
+        print(y);
+        break;
+    }
 }
-
-
-
-

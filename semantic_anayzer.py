@@ -7,83 +7,91 @@ def get_type(variable, simbols_table):
     return False
 
 
-def verify_attribution(token_list, simbols_table, look_ahead):
+def verify_attribution(lista_tokens, tabela_simbolos, look_ahead):
 
-    declared_type = get_type(token_list[look_ahead - 1], simbols_table)
+    tipo_declarada = get_type(lista_tokens[look_ahead - 1], tabela_simbolos)
 
-    if(declared_type):
-        if(declared_type == "int"):
-            received_type = get_type(token_list[look_ahead + 1], simbols_table)
-            if(received_type):
-                if(received_type == "int"):
+    if(tipo_declarada):
+        if(tipo_declarada == "int"):
+            tipo_recebida = get_type(lista_tokens[look_ahead + 1], tabela_simbolos)
+            if(tipo_recebida):
+                if(tipo_recebida == "int"):
                     aux_look_ahead = look_ahead + 2
-                    if(token_list[aux_look_ahead].token == "<operador_aritmetico>"):
-                        while(token_list[aux_look_ahead - 2].token != "<fim_comando>"):
-                            if token_list[aux_look_ahead].token == "<operador_aritmetico>":
-                                if(get_type(token_list[aux_look_ahead + 1], simbols_table) == "int"):
+                    if(lista_tokens[aux_look_ahead].token == "<operador_aritmetico>"):
+                        while(lista_tokens[aux_look_ahead - 2].token != "<fim_comando>"):
+                            if lista_tokens[aux_look_ahead].token == "<operador_aritmetico>":
+                                if(get_type(lista_tokens[aux_look_ahead + 1], tabela_simbolos) == "int"):
                                     #return True
                                     pass
-                                elif(token_list[aux_look_ahead + 1].token == "<numero>"):
+                                elif(lista_tokens[aux_look_ahead + 1].token == "<numero>"):
                                     #return True
                                     pass
                                 else:
-                                    print('\033[91m' + "Semantic error in line {0}, arithmetic with wrong values".format(token_list[look_ahead].line) + '\033[0m') #DETALHAR ERRO
+                                    print('\033[91m' + "Semantic error in line {0}, arithmetic with wrong values".format(lista_tokens[look_ahead].line) + '\033[0m') #DETALHAR ERRO
                                     return False
                             aux_look_ahead += 2
 
                         return True
                     else:
                         return True
-                elif(received_type == "func"):
-                    if(verify_parameters(token_list, simbols_table, look_ahead + 1)): ################ aquiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+                elif(tipo_recebida == "func"):
+                    if(verify_parameters(lista_tokens, tabela_simbolos, look_ahead + 1)): ################ aquiiiiiiiiiiiiiiiiiiiiiiiiiiiii
                         return True
                     else:
                         return False
                 else:
-                    print('\033[91m' + "Semantic error in line {0}, type error".format(token_list[look_ahead].line) + '\033[0m') #DETALHAR ERRO
+                    print('\033[91m' + "Semantic error in line {0}, type error".format(lista_tokens[look_ahead].line) + '\033[0m') #DETALHAR ERRO
                     return False
-            elif(token_list[look_ahead + 1].token == "<numero>"):
+            elif(lista_tokens[look_ahead + 1].token == "<numero>"):
                 aux_look_ahead = look_ahead + 2
-                if(token_list[aux_look_ahead].token == "<operador_aritmetico>"):
-                    while(token_list[aux_look_ahead - 2].token != "<fim_comando>"):
-                        if token_list[aux_look_ahead].token == "<operador_aritmetico>":
-                            if(get_type(token_list[aux_look_ahead + 1], simbols_table) == "int"):
+                if(lista_tokens[aux_look_ahead].token == "<operador_aritmetico>"):
+                    while(lista_tokens[aux_look_ahead - 2].token != "<fim_comando>"):
+                        if lista_tokens[aux_look_ahead].token == "<operador_aritmetico>":
+                            if(get_type(lista_tokens[aux_look_ahead + 1], tabela_simbolos) == "int"):
                                 #return True
                                 pass
-                            elif(token_list[aux_look_ahead + 1].token == "<numero>"):
+                            elif(lista_tokens[aux_look_ahead + 1].token == "<numero>"):
                                 #return True
                                 pass
                             else:
-                                print('\033[91m' + "Semantic error in line {0}, arithmetic with wrong values".format(token_list[look_ahead].line) + '\033[0m') #DETALHAR ERRO
+                                print('\033[91m' + "Semantic error in line {0}, arithmetic with wrong values".format(lista_tokens[look_ahead].line) + '\033[0m') #DETALHAR ERRO
                                 return False
                         aux_look_ahead += 2
                 return True
-            elif not received_type:
-                print('\033[91m' + "Semantic error in line {0}, variabel {1} undeclared".format(token_list[look_ahead - 1].line, token_list[look_ahead - 1].lexer) + '\033[0m') #DETALHAR ERRO
+            elif not tipo_recebida:
+                print('\033[91m' + "Semantic error in line {0}, variabel {1} undeclared".format(lista_tokens[look_ahead - 1].line, lista_tokens[look_ahead - 1].lexer) + '\033[0m') #DETALHAR ERRO
                 return False
             else:
-                print('\033[91m' + "Semantic error in line {0}, type error".format(token_list[look_ahead - 1].line) + '\033[0m') #DETALHAR ERRO
+                print('\033[91m' + "Semantic error in line {0}, type error".format(lista_tokens[look_ahead - 1].line) + '\033[0m') #DETALHAR ERRO
                 return False
-        elif(declared_type == "bool"):
-            received_type = get_type(token_list[look_ahead + 1], simbols_table)
-            if(received_type):
-                if(received_type == "bool"):
+        elif(tipo_declarada == "bool"):
+            tipo_recebida = get_type(lista_tokens[look_ahead + 1], tabela_simbolos)
+            if(tipo_recebida):
+                if(tipo_recebida == "bool"):
                     return True
-                elif received_type == "func":
-                    if(verify_parameters(token_list, simbols_table, look_ahead + 1)):
+                elif tipo_recebida == "func":
+                    if(verify_parameters(lista_tokens, tabela_simbolos, look_ahead + 1)):
                         return True
                     else:
                         return False
                 else:
-                    print('\033[91m' + "Semantic error in line {0}, Incompatible types, expected {1} but receive {2}".format(token_list[look_ahead - 1].line, declared_type, received_type) + '\033[0m') #DETALHAR ERRO
+                    print('\033[91m' + "Semantic error in line {0}, Incompatible types, expected {1} but receive {2}".format(lista_tokens[look_ahead - 1].line, tipo_declarada, tipo_recebida) + '\033[0m') #DETALHAR ERRO
                     return False
-            elif(token_list[look_ahead + 1].token == "<palavraBooleana>"):
+            elif(lista_tokens[look_ahead + 1].token == "<operador_booleano>"):
                 return True
             else:
-                print('\033[91m' + "Semantic error in line {0}, type error".format(token_list[look_ahead].line) + '\033[0m') #DETALHAR ERRO
+                print('\033[91m' + "Semantic error in line {0}, type error".format(lista_tokens[look_ahead].line) + '\033[0m') #DETALHAR ERRO
+                return False
+        elif(tipo_declarada == "const"):
+            if(lista_tokens[look_ahead + 1].token == "<numero>"):
+                return True
+            elif(lista_tokens[look_ahead + 1].token == "<operador_booleano>"):
+                return True
+            else:
+                print('\033[91m' + "Semantic error in line {0}, wrong way to declare constant".format(lista_tokens[look_ahead - 2].line) + '\033[0m') #DETALHAR ERRO
                 return False
     else:
-        print('\033[91m' + "Semantic error in line {0}, variabel {1} undeclared".format(token_list[look_ahead].line, token_list[look_ahead - 1].lexer) + '\033[0m') #DETALHAR ERRO
+        print('\033[91m' + "Semantic error in line {0}, variabel {1} undeclared".format(lista_tokens[look_ahead].line, lista_tokens[look_ahead - 1].lexer) + '\033[0m') #DETALHAR ERRO
         return False
 
 def verify_int(token_list, simbols_table, look_ahead):
@@ -95,7 +103,7 @@ def verify_int(token_list, simbols_table, look_ahead):
     elif(not last_value): ## olhar depois se está correto
         return True
     else:
-        print('\033[91m' + "Semantic error line: {0}, expected int but receive boolean".format(token_list[look_ahead].line) + '\033[0m')
+        print('\033[91m' + "Semantic error line: {0}, expected int but receive bool".format(token_list[look_ahead].line) + '\033[0m')
         return False
     
 def verify_expressions(token_list, simbols_table, look_ahead):
@@ -118,14 +126,14 @@ def verify_expressions(token_list, simbols_table, look_ahead):
                         if(token_list[look_ahead + 1].token == "<operador_relacional>"):
                             return True
                         else:
-                            print('\033[91m' + "Semantic error line: {0}, only boolean operations for two cases".format(token_list[look_ahead - 2].line) + '\033[0m')
+                            print('\033[91m' + "Semantic error line: {0}, only bool operations for two cases".format(token_list[look_ahead - 2].line) + '\033[0m')
                             return False
                 #return True
         elif(first_value == "bool" and second_value == "bool"):
             if(token_list[look_ahead + 1].lexer == "!=" or token_list[look_ahead + 1].lexer == "=="):
                 return True
             else:
-                print('\033[91m' + "Semantic error line: {0}, It is not possible to perform arithmetic operations on boolean values".format(token_list[look_ahead - 2].line) + '\033[0m')
+                print('\033[91m' + "Semantic error line: {0}, It is not possible to perform arithmetic operations on bool values".format(token_list[look_ahead - 2].line) + '\033[0m')
                 return False
         else:
             print('\033[91m' + "Semantic error line: {0}, Incompatible types, expected {1} but receive {2}".format(token_list[look_ahead - 1].line, first_value, second_value) + '\033[0m')
@@ -146,7 +154,7 @@ def verify_expressions(token_list, simbols_table, look_ahead):
                             if(token_list[look_ahead + 1].token == "<operador_relacional>"):
                                 return True
                             else:
-                                print('\033[91m' + "Semantic error line: {0}, only boolean operations for two cases".format(token_list[look_ahead].line) + '\033[0m')
+                                print('\033[91m' + "Semantic error line: {0}, only bool operations for two cases".format(token_list[look_ahead].line) + '\033[0m')
                                 return False
 
 
@@ -162,7 +170,7 @@ def verify_expressions(token_list, simbols_table, look_ahead):
                         print('\033[91m' + "Semantic error line: {0}, Incompatible types, expected {1} but receive {2}".format(token_list[look_ahead - 1].line, first_value, token_list[look_ahead + 2].token) + '\033[0m')
                         return False
                 else:
-                    print('\033[91m' + "Semantic error line: {0}, It is not possible to perform arithmetic operations on boolean values".format(token_list[look_ahead - 2].line) + '\033[0m')
+                    print('\033[91m' + "Semantic error line: {0}, It is not possible to perform arithmetic operations on bool values".format(token_list[look_ahead - 2].line) + '\033[0m')
                     return False
             else:
                 print('\033[91m' + "Semantic error line: {0}, Incompatible types of result".format(token_list[look_ahead - 2].line) + '\033[0m')
@@ -179,7 +187,7 @@ def verify_expressions(token_list, simbols_table, look_ahead):
                             if(token_list[look_ahead + 1].token == "<operador_relacional>"):
                                 return True
                             else:
-                                print('\033[91m' + "Semantic error line: {0}, only boolean operations for two cases".format(token_list[look_ahead - 2].line) + '\033[0m')
+                                print('\033[91m' + "Semantic error line: {0}, only bool operations for two cases".format(token_list[look_ahead - 2].line) + '\033[0m')
                                 return False
                 else:
                     print('\033[91m' + "Semantic error line: {0}, Incompatible types of result".format(token_list[look_ahead - 2].line) + '\033[0m')
@@ -206,7 +214,7 @@ def verify_variable_return(token_list, table_simbols, look_ahead):
     if(get_type(token_list[look_ahead], table_simbols)):
         return True
     else:
-        print('\033[91m' + "Semantic error line: {0}, uninitialized variable".format(token_list[look_ahead - 2].linha) + '\033[0m')
+        print('\033[91m' + "Semantic error line: {0}, uninitialized variable".format(token_list[look_ahead - 2].line) + '\033[0m')
         return False
     
 def verify_parameters(token_list, table_simbols, look_ahead):
@@ -224,7 +232,7 @@ def verify_parameters(token_list, table_simbols, look_ahead):
 
     while(token_list[look_ahead_aux].token != "<fecha_parenteses>" and i < params_amount ):
         if(token_list[look_ahead_aux].token != "<virgula>"):
-            #if(lista_tokens[look_ahead_aux].nome == "<numerico>" and tabela_simbolos[lista_tokens[look_ahead].lexema].listParam[i] == "int"):
+            #if(lista_tokens[look_ahead_aux].token == "<numero>" and tabela_simbolos[lista_tokens[look_ahead].lexer].listParam[i] == "int"):
             if(table_simbols[token_list[look_ahead].lexer].parameters_list[i] == "int"):
                 if(token_list[look_ahead_aux].token == "<numero>"):
                     pass
