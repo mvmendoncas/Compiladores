@@ -7,13 +7,14 @@ class IntermediateCode:
         self.labels = 0 
         self.lastLabelWhile = []
         self.labelsElse = []
-
+    #Essa função imprime a lista de instruções 
     def printInstructionsList(self):
         for i in range(len(self.instructions_list)):
             for j in range(len(self.instructions_list[i])):
                 print(self.instructions_list[i][j].lexer, end=" ")
             print("") 
-
+    #Esta função é o ponto de entrada principal para a geração de código intermediário.
+    # Ela percorre a lista de instruções e chama funções específicas com base no tipo de instrução encontrada.
     def start(self):
         file = open("output.txt", 'w')
 
